@@ -1,0 +1,27 @@
+{
+    "testing": false,
+    "mt_path": "",
+    "cycle": 10,
+    "history_count": 10000,
+
+    "strategy": {
+        "file": "rsi",
+        "name": "RSITrend"
+    },
+
+    "params": {
+        "symbol":"EURUSD",
+        "timeframe": "H1",
+        "magic": 1234,
+        "volume": 0.01,
+
+        "period": 10,
+        "high_trigger": 70,
+        "high_entry": 50,
+        "low_trigger": 30,
+        "low_entry": 50,
+
+        "sl": 0.001,
+        "tp": 0.001
+    }
+  }
