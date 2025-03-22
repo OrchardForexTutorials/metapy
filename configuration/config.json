@@ -1,6 +1,6 @@
 {
     "testing": false,
-    "mt_path": "",
+    "mt_path": "C:/your path to MT5/terminal64.exe",
     "cycle": 10,
     "history_count": 10000,
 

@@ -1,3 +1,4 @@
+# from abc import abstractmethod
 
 from datetime import datetime
 import pandas as pd
@@ -7,8 +8,7 @@ from typing import Optional, Tuple, Type, Union
 from backtesting import Backtest, Strategy
 from backtesting._util import _Data
 
-import modules.CustomMetatrader as mt5
-# import MetaTrader5 as mt5
+import modules.custom_metatrader as mt5
 
 class CustomBacktest(Backtest):
 
@@ -16,8 +16,7 @@ class CustomBacktest(Backtest):
                  data: pd.DataFrame,
                  strategy: Type[Strategy],
                  *,
-                 testing: bool = True,
-                 cycle: int = 10,
+                 config = None,
                  cash: float = 10_000,
                  spread: float = .0,
                  commission: Union[float, Tuple[float, float]] = .0,
@@ -27,9 +26,12 @@ class CustomBacktest(Backtest):
                  exclusive_orders=False,
                  finalize_trades=False,
                  ):
-        
-        self.cycle = cycle
-        self.testing = testing
+
+        self.cycle = 10
+        self.testing = True
+        if config:
+            for name in ["cycle", "testing"]:
+                if hasattr(config, name): setattr(self, name, getattr(config, name))
 
         # create a blank data set
         if data is None:
@@ -39,6 +41,20 @@ class CustomBacktest(Backtest):
             data = pd.DataFrame(values)
             data.set_index('Time', inplace=True)
 
+        # if data is None:
+        #     # Define the number of rows
+        #     num_rows = 50
+
+        #     # Generate the DataFrame in a concise way
+        #     data = pd.DataFrame({
+        #         'Time': [datetime.now()] * num_rows,
+        #         'Open': [0] * num_rows,
+        #         'High': [0] * num_rows,
+        #         'Low': [0] * num_rows,
+        #         'Close': [0] * num_rows,
+        #         'Volume': [0] * num_rows
+        #     }).set_index('Time')  # Set 'Time' as the index
+            
         super().__init__(data, strategy,
                          cash=cash, 
                          spread=spread, 
@@ -74,34 +90,10 @@ class CustomStrategy(Strategy):
     def __init__(self, broker, data, params):
 
         self.config = None
-
         self.is_calculated = False
 
         super().__init__(broker, data, params)
 
-    def open(self, *,
-             type: int=None,
-            size: float = 1.0,
-            limit: Optional[float] = None,
-            stop: Optional[float] = None,
-            sl: Optional[float] = None,
-            tp: Optional[float] = None,
-            tag: object = None) -> 'Order':
-        
-        if not type: return None
-
-        # only dealing with market orders so far
-        price = self.get_open_price(type)
-        if sl_size and not sl: sl = self.sl_from_price(price, sl_size, type)
-        if tp_size and not tp: tp = self.tp_from_price(price, tp_size, type)
-
-        if type == mt5.ORDER_TYPE_BUY:
-            return self.buy(size=size, limit=limit, stop=stop, sl=sl, tp=tp, tag=tag)
-        elif type == mt5.ORDER_TYPE_SELL:
-            return self.sell(size=size, limit=limit, stop=stop, sl=sl, tp=tp, tag=tag)
-        
-        return None
-    
     def buy(self, *,
             size: float = 1.0,
             limit: Optional[float] = None,

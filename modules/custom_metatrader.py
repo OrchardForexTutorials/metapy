@@ -85,11 +85,11 @@ def _request(type, symbol, volume, price=None, *, sl=0.0, tp=0.0, sl_points=0, t
         trade_price = price
 
     request = {
-        "action":    TRADE_ACTION_DEAL,
-        "symbol":    symbol,
-        "volume":    volume,
-        "type":      type,
-        "price":     trade_price,
+        "action":       TRADE_ACTION_DEAL,
+        "symbol":       symbol,
+        "volume":       volume,
+        "type":         type,
+        "price":        trade_price,
         "sl":           sl,
         "tp":           tp,
         "magic":        magic,

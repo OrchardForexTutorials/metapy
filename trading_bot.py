@@ -6,7 +6,7 @@ import modules.CustomMetatrader as mt5
 import modules.util as util
 
 # from backtesting import Backtest, Strategy
-from classes.custom_backtesting import CustomBacktest, CustomStrategy
+from classes.custom_backtesting import CustomBacktest
 
 def main():
 
@@ -37,7 +37,7 @@ def main():
         history = None
 
     # add custom arguments testing, cycle
-    runner = CustomBacktest(history, strategy_class, testing=config.testing, cycle=config.cycle, cash=10000, hedging=True, finalize_trades=True)
+    runner = CustomBacktest(history, strategy_class, config=config, cash=10000, hedging=True, finalize_trades=True)
 
     # add custom arguments testing, symbol, timeframe, magic
     result = runner.run(config=config.params)
